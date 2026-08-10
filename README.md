@@ -1,4 +1,5 @@
 # Awesome Federal Identity, Credential, and Access Management (FICAM)
+![Descriptive alt text]([https://example.com](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg))
 <p><a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer"> <img src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg" alt="Awesome" /> </a></p>
 > A curated list of awesome resources for Federal Identity, Credential, and Access Management (FICAM / ICAM).
 > Maintained for the federal cybersecurity, identity engineering, and Zero Trust architecture communities.
