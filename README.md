@@ -1,4 +1,4 @@
-# Awesome FICAM
+# Awesome Federal Identity, Credential, and Access Management (FICAM)
 
 > A curated list of awesome resources for Federal Identity, Credential, and Access Management (FICAM / ICAM).
 > Maintained for the federal cybersecurity, identity engineering, and Zero Trust architecture communities.
