@@ -1,1226 +1,1089 @@
-<!DOCTYPE html>
+
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <title>Awesome Active Directory FICAM + ICAM</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoEdge / Open Reality API — Reality as a Service</title>
+  <style>
+    :root {
+      --navy: #0a1628;
+      --navy2: #0f1f38;
+      --cyan: #2dd4bf;
+      --cyan-dim: #0f6e56;
+      --text: #d7e6e0;
+      --text-dim: #8aa39a;
+      --border: #1e3a52;
+      --card: #0d1f33;
+      --danger: #e0654a;
+      --font-scale: 1;
+    }
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+    [data-theme="light"] {
+      --navy: #f4f7f6;
+      --navy2: #e9f0ee;
+      --cyan: #0f6e56;
+      --cyan-dim: #2dd4bf;
+      --text: #0d1f1a;
+      --text-dim: #3d554d;
+      --border: #c7d9d3;
+      --card: #ffffff;
+    }
 
-        <!-- Icon Font Stylesheet -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    [data-contrast="high"] {
+      --text: #ffffff;
+      --text-dim: #ffffff;
+      --border: #2dd4bf;
+      --cyan: #5eead4;
+    }
 
-        <!-- Libraries Stylesheet -->
-        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    [data-theme="light"][data-contrast="high"] {
+      --text: #000000;
+      --text-dim: #000000;
+      --border: #0f6e56;
+    }
 
+    * {
+      box-sizing: border-box;
+    }
 
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+    html {
+      font-size: calc(16px * var(--font-scale));
+    }
 
-        <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
-    </head>
+    body {
+      margin: 0;
+      background: var(--navy);
+      color: var(--text);
+      font-family: "SF Mono", "Consolas", "Menlo", monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-    <body>
+    a {
+      color: var(--cyan);
+    }
 
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
+    header {
+      background: var(--navy2);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .75rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.15rem;
+      margin: 0;
+      color: var(--cyan);
+      letter-spacing: .03em;
+    }
+
+    h1 span {
+      color: var(--text-dim);
+      font-weight: normal;
+      font-size: .85em;
+    }
+
+    .a11y {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+
+    .a11y button {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: .35rem .6rem;
+      font-family: inherit;
+      font-size: .8rem;
+      cursor: pointer;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .a11y button:hover,
+    .a11y button:focus-visible {
+      border-color: var(--cyan);
+      outline: none;
+    }
+
+    nav {
+      display: flex;
+      gap: .25rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+      background: var(--navy2);
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      padding: .85rem 1rem;
+      font-family: inherit;
+      font-size: .85rem;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      min-height: 44px;
+    }
+
+    nav button[aria-selected="true"] {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+    }
+
+    nav button:focus-visible {
+      outline: 2px solid var(--cyan);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    section {
+      display: none;
+    }
+
+    section[data-active="true"] {
+      display: block;
+    }
+
+    h2 {
+      color: var(--cyan);
+      font-size: 1.05rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .5rem;
+      margin-top: 2rem;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    h3 {
+      color: var(--cyan);
+      font-size: .95rem;
+      margin-top: 1.4rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .tier {
+      border-left: 3px solid var(--cyan-dim);
+      padding: .6rem .9rem;
+      margin: .6rem 0;
+      background: var(--card);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .tier b {
+      color: var(--cyan);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: .5rem .6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--cyan);
+      background: var(--navy2);
+    }
+
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--cyan-dim);
+      color: var(--cyan);
+      border-radius: 12px;
+      padding: .15rem .6rem;
+      font-size: .75rem;
+      margin: .15rem .25rem .15rem 0;
+    }
+
+    .warn {
+      color: var(--danger);
+      border-left: 3px solid var(--danger);
+      padding: .5rem .8rem;
+      background: var(--card);
+      border-radius: 0 6px 6px 0;
+      font-size: .85rem;
+    }
+
+    .note {
+      border-left: 3px solid var(--cyan-dim);
+      padding: .5rem .8rem;
+      background: var(--card);
+      border-radius: 0 6px 6px 0;
+      font-size: .85rem;
+      color: var(--text-dim);
+    }
+
+    .btn {
+      background: var(--cyan-dim);
+      color: #00160f;
+      border: none;
+      border-radius: 4px;
+      padding: .7rem 1.1rem;
+      font-family: inherit;
+      font-size: .9rem;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--cyan);
+      outline: none;
+    }
+
+    .btn[disabled] {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan-dim);
+    }
+
+    .btn.danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    video,
+    canvas {
+      width: 100%;
+      max-width: 360px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: block;
+      margin: .5rem 0;
+    }
+
+    pre {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .8rem;
+      overflow-x: auto;
+      font-size: .75rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .status {
+      font-size: .85rem;
+      color: var(--text-dim);
+      margin: .4rem 0;
+    }
+
+    .status.ok {
+      color: var(--cyan);
+    }
+
+    .status.err {
+      color: var(--danger);
+    }
+
+    .log-item {
+      border-bottom: 1px solid var(--border);
+      padding: .6rem 0;
+      font-size: .82rem;
+    }
+
+    .log-item:last-child {
+      border-bottom: none;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: .75rem;
+      padding: 2rem 1rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    label {
+      display: block;
+      font-size: .8rem;
+      color: var(--text-dim);
+      margin: .6rem 0 .2rem;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      background: var(--navy2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: .55rem .6rem;
+      font-family: inherit;
+      font-size: .85rem;
+      min-height: 44px;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: 2px solid var(--cyan);
+    }
+
+    .formrow {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+
+    .formrow>div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .badge {
+      font-size: .7rem;
+      padding: .1rem .5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .badge.active {
+      color: var(--cyan);
+      border-color: var(--cyan-dim);
+    }
+
+    .badge.revoked {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .actrow {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+      margin-top: .3rem;
+    }
+
+    .actrow button {
+      font-size: .75rem;
+      padding: .35rem .6rem;
+      min-height: 36px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="row">
+      <h1>GeoEdge / Open Reality API <span>Reality as a Service</span></h1>
+      <div class="a11y" role="group" aria-label="Accessibility controls">
+        <button id="themeToggle" aria-pressed="false">Theme</button>
+        <button id="contrastToggle" aria-pressed="false">Contrast</button>
+        <button id="fontDown" aria-label="Decrease text size">A-</button>
+        <button id="fontUp" aria-label="Increase text size">A+</button>
+      </div>
+    </div>
+  </header>
+
+  <nav role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-tab="overview">Overview</button>
+    <button role="tab" aria-selected="false" data-tab="architecture">Architecture</button>
+    <button role="tab" aria-selected="false" data-tab="governance">Governance</button>
+    <button role="tab" aria-selected="false" data-tab="schema">Schema &amp; Registry</button>
+    <button role="tab" aria-selected="false" data-tab="demo">SPP MVP Demo</button>
+    <button role="tab" aria-selected="false" data-tab="fulldoc">Full Architecture Note</button>
+    <button role="tab" aria-selected="false" data-tab="about">About</button>
+  </nav>
+
+  <main>
+
+    <section data-tab="overview" data-active="true">
+      <h2>Spacetime Positional Provenance</h2>
+      <p>Open Reality API is a Reality-as-a-Service (RaaS) architecture for producing forensically
+        defensible records: WHO generated a piece of data, WHEN it occurred, WHERE it occurred, and
+        WHAT was captured &mdash; verifiable by anyone downstream without trusting whoever submitted it.</p>
+      <p>The distinguishing move: truth is generated at the point of capture by an authenticated
+        edge, not asserted after the fact in software. This portal documents the architecture and
+        hosts a working MVP demo of the fusion-and-signing layer.</p>
+      <div class="card">
+        <span class="pill">Forensics</span>
+        <span class="pill">Photojournalism</span>
+        <span class="pill">Insurance documentation</span>
+        <span class="pill">Drone attestation</span>
+      </div>
+      <p class="status">Beachhead verticals for the first provenance envelopes.</p>
+      <div class="note">This page is a single self-contained HTML file &mdash; no install, no build
+        step, no server. Everything documented here, including the full architecture note, lives in
+        this one file.</div>
+    </section>
+
+    <section data-tab="architecture">
+      <h2>Layered reference architecture</h2>
+      <p>Modeled loosely on the OSI seven-layer discipline: each tier has a narrow job and a named
+        standards body it answers to.</p>
+      <div class="tier"><b>Application</b> &mdash; forensics, photojournalism, insurance documentation, drone attestation.</div>
+      <div class="tier"><b>Provenance envelope</b> &mdash; the WHO / WHEN / WHERE / WHAT claim, packaged as a portable, verifiable record.</div>
+      <div class="tier"><b>Standards anchor</b> &mdash; ISO 19111, IEEE 1588, NIST SP 800-63, W3C Verifiable Credentials.</div>
+      <div class="tier"><b>Authenticated edge SOC</b> &mdash; CSAC + GNSS-RTK + image sensor, fused in hardware at capture.</div>
+      <div class="tier"><b>Compute fabric</b> &mdash; HPC + GPU tensors + QPU (reserved), on NLINK Cloud.</div>
+
+      <h2>Smartphone as the authenticated edge</h2>
+      <p>A consumer smartphone already fields most of the edge SOC in commodity form, ahead of any
+        custom silicon:</p>
+      <table>
+        <tr>
+          <th>Layer</th>
+          <th>Smartphone component</th>
+          <th>Standards anchor</th>
+        </tr>
+        <tr>
+          <td>WHO</td>
+          <td>Secure Enclave / StrongBox + biometric sensor</td>
+          <td>Apple App Attest, Android Play Integrity</td>
+        </tr>
+        <tr>
+          <td>WHEN</td>
+          <td>System clock + NTP drift check</td>
+          <td>IEEE 1588 (reference model)</td>
+        </tr>
+        <tr>
+          <td>WHERE</td>
+          <td>Onboard GNSS (meter-level, not RTK)</td>
+          <td>ISO 19111</td>
+        </tr>
+        <tr>
+          <td>WHAT</td>
+          <td>Camera + secure-element-signed frame hash</td>
+          <td>W3C Verifiable Credentials</td>
+        </tr>
+      </table>
+      <p class="status">Phone GNSS is meter-level, not RTK centimeter-level &mdash; a deliberate MVP tradeoff, not a final architecture.</p>
+    </section>
+
+    <section data-tab="governance">
+      <h2>Who governs each claim</h2>
+      <p>No single authority runs Spacetime Positional Provenance. Each claim type answers to a
+        different standards body; jurisdiction only enters when a claim is disputed.</p>
+      <table>
+        <tr>
+          <th>Claim</th>
+          <th>Standards body</th>
+          <th>Enforcement</th>
+        </tr>
+        <tr>
+          <td>WHO</td>
+          <td>NIST SP 800-63</td>
+          <td>Compulsory in-jurisdiction, treaty-bridged, voluntary beyond</td>
+        </tr>
+        <tr>
+          <td>WHEN</td>
+          <td>IEEE 1588</td>
+          <td>Physics-anchored, not jurisdictional</td>
+        </tr>
+        <tr>
+          <td>WHERE</td>
+          <td>ISO 19111</td>
+          <td>Physics-anchored, not jurisdictional</td>
+        </tr>
+        <tr>
+          <td>WHAT</td>
+          <td>W3C Verifiable Credentials / JSON-LD</td>
+          <td>Cryptographic, not jurisdictional</td>
+        </tr>
+      </table>
+
+      <h2>WHO &mdash; the three enforcement zones</h2>
+      <div class="tier"><b>Compulsory</b> &mdash; within a jurisdiction, courts and regulators can compel disclosure or reject a claim below their assurance-level bar.</div>
+      <div class="tier"><b>Treaty-bridged</b> &mdash; between cooperating jurisdictions, mutual recognition and mutual legal assistance treaties extend a claim's weight, slowly.</div>
+      <div class="tier"><b>Voluntary</b> &mdash; everywhere else. No compulsory force exists; a well-designed cryptographic envelope lets a verifier trust the math even absent a treaty.</div>
+      <p>EULA and app-install permission consent is what makes the voluntary zone usable: an
+        affirmative grant of scope (camera, location, biometric match) stands in as a contractual
+        basis for the WHO claim where law hasn't reached. This imports GDPR biometric-data provisions,
+        Illinois BIPA and comparable state statutes, and each platform's attestation API terms &mdash;
+        respected, not re-invented.</p>
+    </section>
+
+    <section data-tab="schema">
+      <h2>Schema v2 &mdash; GeoJSON, CRS, and enterprise identity</h2>
+      <p>The envelope now carries WHERE and WHAT as a standard <b>GeoJSON Feature</b>, wrapped in a
+        <b>FeatureCollection</b>, with explicit <b>CRS metadata</b> and an extended WHO block that
+        supports enterprise device identity via <b>AWS IAM / IoT Core</b> alongside the original
+        session-key stand-in.
+      </p>
+
+      <h3>Why GeoJSON + CRS</h3>
+      <p>GeoJSON (RFC 7946) is the common interchange format for spatial data, which makes the
+        envelope directly consumable by mapping tools, GIS pipelines, and the existing GNSS-RTK
+        Assistant. RFC 7946 assumes WGS84 (CRS84) everywhere and formally deprecates embedding other
+        CRS values &mdash; but real RTK deployments often reference a local or regional datum. This
+        schema keeps <code>crs</code> as an explicit, documented foreign member for provenance and
+        audit clarity, on the understanding that any consumer expecting strict RFC 7946 should
+        reproject to CRS84 first.</p>
+
+      <h3>Why AWS IAM / IoT Core in the WHO layer</h3>
+      <p>Apple App Attest and Play Integrity cover consumer smartphones. Fleet and enterprise
+        deployments &mdash; a fleet of drones, fixed forensic cameras, insurance inspection rigs &mdash;
+        more often authenticate through <b>AWS IoT Core device certificates (X.509)</b> paired with an
+        <b>IAM role</b> scoping what that device is authorized to attest to. The schema adds these as
+        optional WHO fields alongside the session key, so the same envelope shape works for a phone in
+        someone's pocket or a fleet of registered devices.
+      </p>
+
+      <pre id="schemaExample">{
+  "@context": ["https://www.w3.org/2018/credentials/v1", "https://geoedge.example/spp/v2"],
+  "type": "FeatureCollection",
+  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC::CRS84" } },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-96.34, 30.62] },
+      "properties": {
+        "sppVersion": "SPP-MVP-v1",
+        "who": {
+          "deviceKeyFingerprint": "&hellip;session ECDSA public key hash&hellip;",
+          "awsIotThingArn": "arn:aws:iot:us-east-1:123456789012:thing/soc-0001 (optional)",
+          "awsIamRoleArn": "arn:aws:iam::123456789012:role/GeoEdgeSocAttestor (optional)",
+          "attestation": "session-generated ECDSA P-256 (MVP stand-in)"
+        },
+        "when": "2026-07-21T14:32:00.000Z",
+        "where": { "accuracy": 6.2 },
+        "what": { "frameHash": "&hellip;sha256&hellip;", "hashAlgorithm": "SHA-256" },
+        "proof": { "type": "EcdsaSecp256r1Signature2019-mvp", "signatureHex": "&hellip;" }
+      }
+    }
+  ]
+}</pre>
+
+      <h2>SOC CRUD registry <span class="status" style="font-size:.7em">(local simulation)</span></h2>
+      <div class="warn">This registry runs entirely in this browser's localStorage. In production
+        it models what would live in AWS IoT Core's Device Registry: create/read/update/delete
+        operations on a SOC's identity, its IAM role binding, and its certificate fingerprint. No AWS
+        calls are made from this static page.</div>
+
+      <div class="card">
+        <h3 style="margin-top:0">Register a SOC</h3>
+        <div class="formrow">
+          <div><label for="socName">SOC name / label</label><input type="text" id="socName" placeholder="e.g. Drone-04 forward camera"></div>
+          <div><label for="socThing">AWS IoT Thing ARN (optional)</label><input type="text" id="socThing" placeholder="arn:aws:iot:...:thing/soc-0001"></div>
         </div>
-        <!-- Spinner End -->
-
-
-        <!-- Navbar start -->
-        <div class="container-fluid fixed-top">
-            <div class="container topbar bg-primary d-none d-lg-block">
-                <div class="d-flex justify-content-between">
-                    <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">United States of America</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">admin@hackherway.rocks</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white ms-2">More Site Policy</small></a>
-                    </div>
-                </div>
-            </div>
-            <div class="container px-0">
-                <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">hackherway</h1></a>
-                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars text-primary"></span>
-                    </button>
-                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                        <div class="navbar-nav mx-auto">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
-                        
-<div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">FICAM</a>
-                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="ficam.html" class="dropdown-item">FICAM Architecture</a>
-                                    <a href="post-quantum.html" class="dropdown-item">Post-Quantum Cryptography</a>
-                                    <a href="zero-trust.html" class="dropdown-item">Zero Trust</a>
-                                    <a href="404.html" class="dropdown-item">404 Page</a>
-                                </div>
+        <div class="formrow">
+          <div><label for="socRole">AWS IAM Role ARN (optional)</label><input type="text" id="socRole" placeholder="arn:aws:iam::...:role/GeoEdgeSocAttestor"></div>
+          <div><label for="socStatus">Status</label>
+            <select id="socStatus">
+              <option value="active">active</option>
+              <option value="revoked">revoked</option>
+            </select>
+          </div>
         </div>
+        <div class="actrow"><button class="btn" id="socCreate">Create SOC record</button></div>
+      </div>
 
-    <a href="ficam1.html" class="nav-item nav-link">FICAM</a>
-                            <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="cart.html" class="dropdown-item">Cart</a>
-                                    <a href="chackout.html" class="dropdown-item">Chackout</a>
-                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                    <a href="404.html" class="dropdown-item">404 Page</a>
-                                </div>
-                            </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        </div>
-                        <div class="d-flex m-3 me-0">
-                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                            <a href="#" class="position-relative me-4 my-auto">
-                                <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                            </a>
-                            <a href="#" class="my-auto">
-                                <i class="fas fa-user fa-2x"></i>
-                            </a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
+      <div class="card">
+        <h3 style="margin-top:0">Registered SOCs</h3>
+        <div id="socTable">
+          <p class="status">No SOC records yet.</p>
         </div>
-        <!-- Navbar End -->
+        <div class="actrow"><button class="btn secondary" id="socClear">Clear registry</button></div>
+      </div>
+    </section>
 
+    <section data-tab="demo">
+      <h2>SPP MVP Demo v1</h2>
+      <p>A live fusion-and-signing demo. Runs entirely in this page using the browser's native
+        Geolocation, camera, and Web Crypto APIs &mdash; no external libraries, no server. Output is a
+        GeoJSON FeatureCollection per the v2 schema, optionally bound to a registered SOC.</p>
+      <div class="warn">Requires a secure context (https, or a browser that trusts local files) and
+        will ask permission for location and camera. Nothing leaves this device: all processing is
+        local, and no image data is transmitted or stored, only its hash.</div>
 
-        <!-- Modal Search Start -->
-        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center">
-                        <div class="input-group w-75 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="card">
+        <button class="btn" id="startCam">1. Enable camera</button>
+        <video id="video" autoplay playsinline muted style="display:none"></video>
+        <canvas id="canvas" style="display:none"></canvas>
+        <p class="status" id="camStatus">Camera not started.</p>
+      </div>
+
+      <div class="card">
+        <label for="socSelect">2. Attach a registered SOC (optional)</label>
+        <select id="socSelect">
+          <option value="">None &mdash; use session key only</option>
+        </select>
+        <div class="actrow" style="margin-top:.8rem">
+          <button class="btn" id="capture" disabled>3. Capture provenance envelope</button>
         </div>
-        <!-- Modal Search End -->
+        <p class="status" id="capStatus">Waiting for camera.</p>
+      </div>
 
+      <div class="card" id="resultCard" style="display:none">
+        <h3 style="color:var(--cyan); margin-top:0;">Provenance envelope (GeoJSON FeatureCollection)</h3>
+        <pre id="envelopeOut"></pre>
+        <button class="btn secondary" id="downloadEnvelope">Download JSON</button>
+      </div>
 
-        <!-- Hero Start -->
-        <div class="container-fluid py-5 mb-5 hero-header">
-            <div class="container py-5">
-                <div class="row g-5 align-items-center">
-                    <div class="col-md-12 col-lg-7">
-                        <h4 class="mb-3 text-secondary">AWESOME</h4>
-                        <h1 class="mb-5 display-3 text-primary">Active Directory & Federal Identity, Credential, and Access Management (FICAM)</h1>
-                        <div class="position-relative mx-auto">
-                            <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="">
-                            <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">🔎</button>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-lg-5">
-                        <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
-                            <div class="carousel-inner" role="listbox">
-                                <div class="carousel-item active rounded">
-                                    <img src="img/hero-img-1.png" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Fruites</a>
-                                </div>
-                                <div class="carousel-item rounded">
-                                    <img src="img/hero-img-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Second slide">
-                                    <a href="#" class="btn px-4 py-2 text-white rounded">Vesitables</a>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Hero End -->
+      <h2>Capture history <span style="font-size:.7em; color:var(--text-dim)">(this device only)</span></h2>
+      <div class="card" id="history">
+        <p class="status">No captures yet.</p>
+      </div>
+      <button class="btn secondary" id="clearHistory">Clear history</button>
+    </section>
 
+    <section data-tab="fulldoc">
+      <h2>Full architecture note</h2>
+      <p class="status">Merged from the standalone GeoEdge_SpacetimePositionalProvenance document so
+        everything lives in one file.</p>
 
-        <!-- Featurs Section Start -->
-        <div class="container-fluid featurs py-5">
-            <div class="container py-5">
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-3">
-                        <div class="featurs-item text-center rounded bg-light p-4">
-                            <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                                <i class="fas fa-car-side fa-3x text-white"></i>
-                            </div>
-                            <div class="featurs-content text-center">
-                                <h5>Free Shipping</h5>
-                                <p class="mb-0">Free on order over $300</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3">
-                        <div class="featurs-item text-center rounded bg-light p-4">
-                            <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                                <i class="fas fa-user-shield fa-3x text-white"></i>
-                            </div>
-                            <div class="featurs-content text-center">
-                                <h5>Security Payment</h5>
-                                <p class="mb-0">100% security payment</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3">
-                        <div class="featurs-item text-center rounded bg-light p-4">
-                            <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                                <i class="fas fa-exchange-alt fa-3x text-white"></i>
-                            </div>
-                            <div class="featurs-content text-center">
-                                <h5>30 Day Return</h5>
-                                <p class="mb-0">30 day money guarantee</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3">
-                        <div class="featurs-item text-center rounded bg-light p-4">
-                            <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                                <i class="fa fa-phone-alt fa-3x text-white"></i>
-                            </div>
-                            <div class="featurs-content text-center">
-                                <h5>24/7 Support</h5>
-                                <p class="mb-0">Support every time fast</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Featurs Section End -->
+      <h3>1. Concept</h3>
+      <p>Spacetime Positional Provenance (SPP) extends the GeoEdge Precision Provenance wedge from a
+        WHEN+WHERE claim into a full four-attribute forensic attestation: WHO generated the record,
+        WHEN it occurred, WHERE it occurred, and WHAT was captured. The distinguishing move is where
+        the truth is generated: not asserted after the fact in software, but produced at the point of
+        capture by an authenticated edge System-on-Chip, then carried through a standards-anchored
+        envelope so any downstream verifier &mdash; a court, an insurer, a newsroom &mdash; can validate
+        it without trusting the party who submitted it.</p>
+      <p>This reframes the GeoEdge provenance line from a geolocation-metadata feature into a
+        general-purpose chain-of-custody primitive, with the four forensic beachhead verticals
+        (forensics, photojournalism, insurance documentation, drone attestation) as first customers
+        rather than the whole addressable market.</p>
 
+      <h3>2. Layered reference architecture</h3>
+      <p>Modeled loosely on the OSI seven-layer discipline: each tier has a narrow job and a named
+        standards body it answers to, so the stack can be audited layer by layer rather than taken on
+        faith as a monolith. See the Architecture tab for the full table.</p>
 
-        <!-- Fruits Shop Start-->
-        <div class="container-fluid fruite py-5">
-            <div class="container py-5">
-                <div class="tab-class text-center">
-                    <div class="row g-4">
-                        <div class="col-lg-4 text-start">
-                            <h1>Our Organic Products</h1>
-                        </div>
-                        <div class="col-lg-8 text-end">
-                            <ul class="nav nav-pills d-inline-flex text-center mb-5">
-                                <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
-                                        <span class="text-dark" style="width: 130px;">All Products</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-                                        <span class="text-dark" style="width: 130px;">Vegetables</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
-                                        <span class="text-dark" style="width: 130px;">Fruits</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
-                                        <span class="text-dark" style="width: 130px;">Bread</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
-                                        <span class="text-dark" style="width: 130px;">Meat</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tab-content">
-                        <div id="tab-1" class="tab-pane fade show p-0 active">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Apricots</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-3.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Banana</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Oranges</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-2" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-3" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Oranges</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Apple</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-4" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Apricots</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-5" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-3.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Banana</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Oranges</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>      
-            </div>
-        </div>
-        <!-- Fruits Shop End-->
+      <h3>3. The authenticated edge SOC &mdash; the actual invention</h3>
+      <p>Everything above the edge SOC layer is applications consuming a record; everything below it
+        is commodity compute. The novel contribution is fusing three independent truths into one
+        attested package at the silicon level: CSAC (timing truth, independent of spoofable network
+        time), GNSS-RTK (centimeter-level positional truth), and an ISOCELL-class image sensor (visual
+        truth, bound to the same timing and position source at capture, not stitched on afterward).
+        Because all three are fused before the record ever leaves the device, a verifier is checking a
+        hardware attestation rather than trusting a chain of software claims &mdash; the same trust
+        model shift that moved payment cards from magnetic stripe to chip-and-PIN.</p>
 
+      <h3>4. Compute tier &mdash; NLINK Cloud</h3>
+      <p>HPC handles bulk provenance verification and batch record processing. GPU tensors handle
+        vision inference and pose/motion work, continuous with the existing MoveNet pipeline. QPU is
+        reserved as a forward slot for the MULTIVERSITY quantum-walk work, most plausibly as a hardware
+        source of verifiable randomness or an unclonable challenge-response primitive for the identity
+        layer, once that research matures enough to justify it.</p>
 
-        <!-- Featurs Start -->
-        <div class="container-fluid service py-5">
-            <div class="container py-5">
-                <div class="row g-4 justify-content-center">
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-secondary rounded border border-secondary">
-                                <img src="img/featur-1.jpg" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-primary text-center p-4 rounded">
-                                        <h5 class="text-white">Fresh Apples</h5>
-                                        <h3 class="mb-0">20% OFF</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-dark rounded border border-dark">
-                                <img src="img/featur-2.jpg" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-light text-center p-4 rounded">
-                                        <h5 class="text-primary">Tasty Fruits</h5>
-                                        <h3 class="mb-0">Free delivery</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-primary rounded border border-primary">
-                                <img src="img/featur-3.jpg" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-secondary text-center p-4 rounded">
-                                        <h5 class="text-white">Exotic Vegitable</h5>
-                                        <h3 class="mb-0">Discount 30$</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Featurs End -->
+      <h3>5. Relationship to existing GeoEdge work</h3>
+      <p>The Precision Provenance one-pager is the wedge SPP architecturally expands from
+        WHEN+WHERE to WHO/WHEN/WHERE/WHAT. The GNSS-RTK Assistant supplies the positional truth
+        component of the edge SOC. MULTIVERSITY is the candidate source for the QPU-reserved function
+        in the compute tier. The C2 Flight Deck / Tactical Island work is a natural early consumer,
+        with drone attestation as one of the four beachhead verticals.</p>
 
+      <h3>6. Resolved &mdash; minimum viable edge SOC prototype path</h3>
+      <p>The fusion demo does not require custom silicon and can be assembled almost entirely from
+        existing GeoEdge components, following the standard single-file HTML5, no-build-tooling
+        constraint. Position truth reuses the GNSS-RTK Assistant as-is (Browser Geolocation API plus
+        WebSerial / MQTT / WiFi-TCP / Bluetooth BLE for real RTK receivers). Visual truth reuses the
+        OpenCV.js webcam tab already built in that same app. Timing truth substitutes the CSAC with the
+        PPS (pulse-per-second) signal most GNSS/RTK receivers already expose, disciplined to the same
+        satellite atomic clocks a CSAC references, falling back to an NTP/PTP drift check where PPS
+        isn't exposed. Fusion happens at capture: hash the video frame, pair it with the RTK
+        coordinates and the verified timestamp, sign the bundle, and emit it as the provenance
+        envelope. This is "SPP MVP Demo v1" &mdash; mostly assembly of already-shipped components plus
+        one new fusion-and-signing layer.</p>
 
-        <!-- Vesitable Shop Start-->
-        <div class="container-fluid vesitable py-5">
-            <div class="container py-5">
-                <h1 class="mb-0">Fresh Organic Vegetables</h1>
-                <div class="owl-carousel vegetable-carousel justify-content-center">
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-3.png" class="img-fluid w-100 rounded-top bg-light" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Banana</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Bell Papper</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Potatoes</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Potatoes</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border border-primary rounded position-relative vesitable-item">
-                        <div class="vesitable-img">
-                            <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                        </div>
-                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                        <div class="p-4 rounded-bottom">
-                            <h4>Parsely</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Vesitable Shop End -->
+      <h3>7. Smartphone as the authenticated edge SOC</h3>
+      <p>See the Architecture tab for the full component table: Secure Enclave / StrongBox for the
+        hardware root of trust, biometric sensor bound to it for the device-side WHO layer, onboard
+        GNSS for a lower-fidelity WHERE, system clock plus NTP for WHEN, and camera plus secure-element
+        attestation for WHAT. Apple App Attest and Android Play Integrity serve as the standards anchor
+        for this layer, the same role NIST, IEEE, ISO, and W3C play elsewhere in the stack.</p>
 
+      <h3>8. WHO &mdash; jurisdiction, treaty, and the voluntary zone</h3>
+      <p>See the Governance tab for the full breakdown of the three enforcement zones &mdash;
+        compulsory within a jurisdiction, treaty-bridged between cooperating jurisdictions, and
+        voluntary everywhere else &mdash; and the role of EULA/consent as the mechanism that makes the
+        voluntary zone usable.</p>
 
-        <!-- Banner Section Start-->
-        <div class="container-fluid banner bg-secondary my-5">
-            <div class="container py-5">
-                <div class="row g-4 align-items-center">
-                    <div class="col-lg-6">
-                        <div class="py-4">
-                            <h1 class="display-3 text-white">Fresh Exotic Fruits</h1>
-                            <p class="fw-normal display-3 text-dark mb-4">in Our Store</p>
-                            <p class="mb-4 text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc.</p>
-                            <a href="#" class="banner-btn btn border-2 border-white rounded-pill text-dark py-3 px-5">BUY</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="position-relative">
-                            <img src="img/baner-1.png" class="img-fluid w-100 rounded" alt="">
-                            <div class="d-flex align-items-center justify-content-center bg-white rounded-circle position-absolute" style="width: 140px; height: 140px; top: 0; left: 0;">
-                                <h1 style="font-size: 100px;">1</h1>
-                                <div class="d-flex flex-column">
-                                    <span class="h2 mb-0">50$</span>
-                                    <span class="h4 text-muted mb-0">kg</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Banner Section End -->
+      <h3>9. Schema v2 &mdash; GeoJSON, CRS, and enterprise identity</h3>
+      <p>See the Schema &amp; Registry tab for the full GeoJSON FeatureCollection schema, the CRS
+        metadata rationale, the AWS IAM/IoT Core WHO-layer extension, and the local SOC CRUD registry
+        that simulates a production device registry.</p>
 
+      <h3>Remaining open questions</h3>
+      <ul>
+        <li>Does the envelope format follow W3C Verifiable Credentials directly, or continue as this
+          GeoJSON-native structure that maps onto it for interop?</li>
+        <li>For the voluntary zone specifically &mdash; what minimum cryptographic envelope design
+          lets a verifier extend trust absent any treaty backing?</li>
+        <li>At what point does the local SOC registry graduate to an actual AWS IoT Core / IAM
+          backend, and what triggers that move?</li>
+      </ul>
+    </section>
 
-        <!-- Bestsaler Product Start -->
-        <div class="container-fluid py-5">
-            <div class="container py-5">
-                <div class="text-center mx-auto mb-5" style="max-width: 700px;">
-                    <h1 class="display-4">Bestseller Products</h1>
-                    <p>Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-1.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-2.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-3.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-4.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-5.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="p-4 rounded bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <img src="img/best-product-6.jpg" class="img-fluid rounded-circle w-100" alt="">
-                                </div>
-                                <div class="col-6">
-                                    <a href="#" class="h5">Organic Tomato</a>
-                                    <div class="d-flex my-3">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <h4 class="mb-3">3.12 $</h4>
-                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="text-center">
-                            <img src="img/fruite-item-1.jpg" class="img-fluid rounded" alt="">
-                            <div class="py-4">
-                                <a href="#" class="h5">Organic Tomato</a>
-                                <div class="d-flex my-3 justify-content-center">
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <h4 class="mb-3">3.12 $</h4>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="text-center">
-                            <img src="img/fruite-item-2.jpg" class="img-fluid rounded" alt="">
-                            <div class="py-4">
-                                <a href="#" class="h5">Organic Tomato</a>
-                                <div class="d-flex my-3 justify-content-center">
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <h4 class="mb-3">3.12 $</h4>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="text-center">
-                            <img src="img/fruite-item-3.jpg" class="img-fluid rounded" alt="">
-                            <div class="py-4">
-                                <a href="#" class="h5">Organic Tomato</a>
-                                <div class="d-flex my-3 justify-content-center">
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <h4 class="mb-3">3.12 $</h4>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="text-center">
-                            <img src="img/fruite-item-4.jpg" class="img-fluid rounded" alt="">
-                            <div class="py-2">
-                                <a href="#" class="h5">Organic Tomato</a>
-                                <div class="d-flex my-3 justify-content-center">
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star text-primary"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <h4 class="mb-3">3.12 $</h4>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bestsaler Product End -->
+    <section data-tab="about">
+      <h2>Continuity note</h2>
+      <p>Part of the GeoEdge WaaS ecosystem. Related components: the GNSS-RTK Assistant (position
+        and RTK receiver integration), the OpenCV.js webcam tab it contributed here, and MULTIVERSITY
+        as the candidate source for the QPU-reserved function in the compute fabric.</p>
+      <h2>Open questions</h2>
+      <ul>
+        <li>Does the envelope format follow W3C Verifiable Credentials directly, or a GeoEdge-native structure that maps onto it?</li>
+        <li>What minimum cryptographic envelope design lets a verifier extend trust in the voluntary zone, absent any treaty?</li>
+        <li>At what point does the local SOC registry graduate to an actual AWS IoT Core / IAM backend?</li>
+      </ul>
+      <p class="status">Architecture note, drafted for continuity across build sessions.</p>
+    </section>
 
+  </main>
 
-        <!-- Fact Start -->
-        <div class="container-fluid py-5">
-            <div class="container">
-                <div class="bg-light p-5 rounded">
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-md-6 col-lg-6 col-xl-3">
-                            <div class="counter bg-white rounded p-5">
-                                <i class="fa fa-users text-secondary"></i>
-                                <h4>satisfied customers</h4>
-                                <h1>1963</h1>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3">
-                            <div class="counter bg-white rounded p-5">
-                                <i class="fa fa-users text-secondary"></i>
-                                <h4>quality of service</h4>
-                                <h1>99%</h1>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3">
-                            <div class="counter bg-white rounded p-5">
-                                <i class="fa fa-users text-secondary"></i>
-                                <h4>quality certificates</h4>
-                                <h1>33</h1>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3">
-                            <div class="counter bg-white rounded p-5">
-                                <i class="fa fa-users text-secondary"></i>
-                                <h4>Available Products</h4>
-                                <h1>789</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Fact Start -->
+  <footer>GeoEdge WaaS ecosystem &mdash; Open Reality API / Spacetime Positional Provenance &mdash; single-file, no build tooling, local-first.</footer>
 
+  <script>
+    // ---------- Accessibility ----------
+    const root = document.documentElement;
+    let fontScale = 1;
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isLight = root.getAttribute('data-theme') === 'light';
+      root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      document.getElementById('themeToggle').setAttribute('aria-pressed', String(!isLight));
+    });
+    document.getElementById('contrastToggle').addEventListener('click', () => {
+      const isHigh = root.getAttribute('data-contrast') === 'high';
+      root.setAttribute('data-contrast', isHigh ? 'normal' : 'high');
+      document.getElementById('contrastToggle').setAttribute('aria-pressed', String(!isHigh));
+    });
+    document.getElementById('fontUp').addEventListener('click', () => {
+      fontScale = Math.min(1.4, fontScale + 0.1);
+      root.style.setProperty('--font-scale', fontScale);
+    });
+    document.getElementById('fontDown').addEventListener('click', () => {
+      fontScale = Math.max(0.8, fontScale - 0.1);
+      root.style.setProperty('--font-scale', fontScale);
+    });
+    // ---------- Tabs ----------
+    const tabs = document.querySelectorAll('nav [role="tab"]');
+    const sections = document.querySelectorAll('main section');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+        sections.forEach(s => s.removeAttribute('data-active'));
+        tab.setAttribute('aria-selected', 'true');
+        document.querySelector(`section[data-tab="${tab.dataset.tab}"]`).setAttribute('data-active', 'true');
+        if (tab.dataset.tab === 'demo') refreshSocSelect();
+      });
+    });
+    // ---------- SOC CRUD registry (local simulation of AWS IoT Device Registry) ----------
+    const SOC_KEY = 'spp_soc_registry';
 
-        <!-- Tastimonial Start -->
-        <div class="container-fluid testimonial py-5">
-            <div class="container py-5">
-                <div class="testimonial-header text-center">
-                    <h4 class="text-primary">Our Testimonial</h4>
-                    <h1 class="display-5 mb-5 text-dark">Our Client Saying!</h1>
-                </div>
-                <div class="owl-carousel testimonial-carousel">
-                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
-                        <div class="position-relative">
-                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
-                            <div class="mb-4 pb-4 border-bottom border-secondary">
-                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                </p>
-                            </div>
-                            <div class="d-flex align-items-center flex-nowrap">
-                                <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
-                                </div>
-                                <div class="ms-4 d-block">
-                                    <h4 class="text-dark">Client Name</h4>
-                                    <p class="m-0 pb-3">Profession</p>
-                                    <div class="d-flex pe-5">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
-                        <div class="position-relative">
-                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
-                            <div class="mb-4 pb-4 border-bottom border-secondary">
-                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                </p>
-                            </div>
-                            <div class="d-flex align-items-center flex-nowrap">
-                                <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
-                                </div>
-                                <div class="ms-4 d-block">
-                                    <h4 class="text-dark">Client Name</h4>
-                                    <p class="m-0 pb-3">Profession</p>
-                                    <div class="d-flex pe-5">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
-                        <div class="position-relative">
-                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
-                            <div class="mb-4 pb-4 border-bottom border-secondary">
-                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                </p>
-                            </div>
-                            <div class="d-flex align-items-center flex-nowrap">
-                                <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
-                                </div>
-                                <div class="ms-4 d-block">
-                                    <h4 class="text-dark">Client Name</h4>
-                                    <p class="m-0 pb-3">Profession</p>
-                                    <div class="d-flex pe-5">
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                        <i class="fas fa-star text-primary"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Tastimonial End -->
+    function loadSocs() {
+      try {
+        return JSON.parse(localStorage.getItem(SOC_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
 
+    function saveSocs(list) {
+      try {
+        localStorage.setItem(SOC_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
 
-        <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
-            <div class="container py-5">
-                <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
-                    <div class="row g-4">
-                        <div class="col-lg-3">
-                            <a href="#">
-                                <h1 class="text-primary mb-0">hackherway</h1>
-                                <p class="text-secondary mb-0">Fresh products</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="position-relative mx-auto">
-                                <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
-                                <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="d-flex justify-content-end pt-3">
-                                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-youtube"></i></a>
-                                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row g-5">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-item">
-                            <h4 class="text-light mb-3">Why People Like us!</h4>
-                            <p class="mb-4">typesetting, remaining essentially unchanged. It was 
-                                popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
-                            <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Shop Info</h4>
-                            <a class="btn-link" href="">About Us</a>
-                            <a class="btn-link" href="">Contact Us</a>
-                            <a class="btn-link" href="">Privacy Policy</a>
-                            <a class="btn-link" href="">Terms & Condition</a>
-                            <a class="btn-link" href="">Return Policy</a>
-                            <a class="btn-link" href="">FAQs & Help</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Account</h4>
-                            <a class="btn-link" href="">My Account</a>
-                            <a class="btn-link" href="">Shop details</a>
-                            <a class="btn-link" href="">Shopping Cart</a>
-                            <a class="btn-link" href="">Wishlist</a>
-                            <a class="btn-link" href="">Order History</a>
-                            <a class="btn-link" href="">International Orders</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-item">
-                            <h4 class="text-light mb-3">Contact</h4>
-                            <p>Address: 1429 Netus Rd, NY 48247</p>
-                            <p>Email: Example@gmail.com</p>
-                            <p>Phone: +0123 4567 8910</p>
-                            <p>Payment Accepted</p>
-                            <img src="img/payment.png" class="img-fluid" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Footer End -->
+    function renderSocTable() {
+      const list = loadSocs();
+      const el = document.getElementById('socTable');
+      if (!list.length) {
+        el.innerHTML = '<p class="status">No SOC records yet.</p>';
+        return;
+      }
+      el.innerHTML = list.map(s => `
+    <div class="log-item">
+      <div><b style="color:var(--cyan)">${s.name}</b> <span class="badge ${s.status}">${s.status}</span></div>
+      <div class="status">id: ${s.id}</div>
+      ${s.thingArn ? `<div class="status">IoT Thing: ${s.thingArn}</div>` : ''}
+      ${s.roleArn ? `<div class="status">IAM Role: ${s.roleArn}</div>` : ''}
+      <div class="status">created: ${s.createdAt} &middot; updated: ${s.updatedAt}</div>
+      <div class="actrow">
+        <button class="btn secondary" data-toggle="${s.id}">Toggle status</button>
+        <button class="btn danger" data-delete="${s.id}">Delete</button>
+      </div>
+    </div>`).join('');
+      el.querySelectorAll('[data-toggle]').forEach(b => b.addEventListener('click', () => {
+        const list2 = loadSocs();
+        const rec = list2.find(x => x.id === b.dataset.toggle);
+        rec.status = rec.status === 'active' ? 'revoked' : 'active';
+        rec.updatedAt = new Date().toISOString();
+        saveSocs(list2);
+        renderSocTable();
+        refreshSocSelect();
+      }));
+      el.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => {
+        saveSocs(loadSocs().filter(x => x.id !== b.dataset.delete));
+        renderSocTable();
+        refreshSocSelect();
+      }));
+    }
+    document.getElementById('socCreate').addEventListener('click', () => {
+      const name = document.getElementById('socName').value.trim();
+      if (!name) return;
+      const now = new Date().toISOString();
+      const list = loadSocs();
+      list.push({
+        id: 'soc-' + Math.random().toString(36).slice(2, 10),
+        name,
+        thingArn: document.getElementById('socThing').value.trim(),
+        roleArn: document.getElementById('socRole').value.trim(),
+        status: document.getElementById('socStatus').value,
+        createdAt: now,
+        updatedAt: now
+      });
+      saveSocs(list);
+      document.getElementById('socName').value = '';
+      document.getElementById('socThing').value = '';
+      document.getElementById('socRole').value = '';
+      renderSocTable();
+      refreshSocSelect();
+    });
+    document.getElementById('socClear').addEventListener('click', () => {
+      localStorage.removeItem(SOC_KEY);
+      renderSocTable();
+      refreshSocSelect();
+    });
 
-        <!-- Copyright Start -->
-        <div class="container-fluid copyright bg-dark py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
-                    </div>
-                    <div class="col-md-6 my-auto text-center text-md-end text-white">
-                        <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                        <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                        <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Copyright End -->
+    function refreshSocSelect() {
+      const sel = document.getElementById('socSelect');
+      const list = loadSocs().filter(s => s.status === 'active');
+      sel.innerHTML = '<option value="">None &mdash; use session key only</option>' +
+        list.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    }
+    renderSocTable();
+    refreshSocSelect();
+    // ---------- SPP MVP Demo ----------
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const camStatus = document.getElementById('camStatus');
+    const capStatus = document.getElementById('capStatus');
+    const captureBtn = document.getElementById('capture');
+    const startCamBtn = document.getElementById('startCam');
+    const resultCard = document.getElementById('resultCard');
+    const envelopeOut = document.getElementById('envelopeOut');
+    const historyEl = document.getElementById('history');
+    let stream = null;
+    let signingKeyPair = null;
+    const STORAGE_KEY = 'spp_mvp_envelopes_v2';
 
+    function loadHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
 
+    function saveHistory(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+    function renderHistory() {
+      const list = loadHistory();
+      if (!list.length) {
+        historyEl.innerHTML = '<p class="status">No captures yet.</p>';
+        return;
+      }
+      historyEl.innerHTML = list.slice().reverse().map(fc => {
+        const p = fc.features[0].properties;
+        const coords = fc.features[0].geometry.coordinates;
+        return `
+    <div class="log-item">
+      <div><b style="color:var(--cyan)">${p.when}</b></div>
+      <div>where: ${coords[1].toFixed(5)}, ${coords[0].toFixed(5)} (&plusmn;${Math.round(p.where.accuracy)}m)</div>
+      <div>what: frame hash ${p.what.frameHash.slice(0, 24)}&hellip;</div>
+      <div>who: ${p.who.socName ? p.who.socName : 'session key'} ${p.who.deviceKeyFingerprint.slice(0, 20)}&hellip;</div>
+    </div>`;
+      }).join('');
+    }
+    renderHistory();
+    document.getElementById('clearHistory').addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+    });
+    async function ensureSigningKey() {
+      if (signingKeyPair) return signingKeyPair;
+      signingKeyPair = await crypto.subtle.generateKey({
+        name: 'ECDSA',
+        namedCurve: 'P-256'
+      }, true, ['sign', 'verify']);
+      return signingKeyPair;
+    }
 
-        
-    <!-- JavaScript Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
-    </body>
+    function bufToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    startCamBtn.addEventListener('click', async () => {
+      camStatus.textContent = 'Requesting camera access...';
+      camStatus.className = 'status';
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment'
+          }
+        });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        await ensureSigningKey();
+        camStatus.textContent = 'Camera live. Signing key generated in-session (not persisted).';
+        camStatus.className = 'status ok';
+        captureBtn.disabled = false;
+        capStatus.textContent = 'Ready to capture.';
+      } catch (err) {
+        camStatus.textContent = 'Camera unavailable: ' + err.message + '. This device or context may not support it (needs https or a trusted local file context, plus permission).';
+        camStatus.className = 'status err';
+      }
+    });
+    captureBtn.addEventListener('click', async () => {
+      capStatus.textContent = 'Capturing...';
+      capStatus.className = 'status';
+      try {
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+        const frameBuf = await blob.arrayBuffer();
+        const frameHash = bufToHex(await crypto.subtle.digest('SHA-256', frameBuf));
+        const position = await new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Geolocation not supported'));
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 8000
+          });
+        });
+        const when = new Date().toISOString();
+        const pubKeyRaw = await crypto.subtle.exportKey('raw', signingKeyPair.publicKey);
+        const deviceKeyFingerprint = bufToHex(await crypto.subtle.digest('SHA-256', pubKeyRaw));
+        const socId = document.getElementById('socSelect').value;
+        const soc = socId ? loadSocs().find(s => s.id === socId) : null;
+        const who = {
+          deviceKeyFingerprint,
+          attestation: 'session-generated ECDSA P-256 (MVP stand-in for platform secure-element attestation)'
+        };
+        if (soc) {
+          who.socId = soc.id;
+          who.socName = soc.name;
+          if (soc.thingArn) who.awsIotThingArn = soc.thingArn;
+          if (soc.roleArn) who.awsIamRoleArn = soc.roleArn;
+        }
+        const properties = {
+          sppVersion: 'SPP-MVP-v1',
+          who,
+          when,
+          where: {
+            accuracy: position.coords.accuracy
+          },
+          what: {
+            frameHash,
+            hashAlgorithm: 'SHA-256',
+            note: 'hash only; no image data stored or transmitted'
+          }
+        };
+        const claimBytes = new TextEncoder().encode(JSON.stringify(properties));
+        const signatureHex = bufToHex(await crypto.subtle.sign({
+          name: 'ECDSA',
+          hash: 'SHA-256'
+        }, signingKeyPair.privateKey, claimBytes));
+        properties.proof = {
+          type: 'EcdsaSecp256r1Signature2019-mvp',
+          signatureHex
+        };
+        const envelope = {
+          '@context': ['https://www.w3.org/2018/credentials/v1', 'https://geoedge.example/spp/v2'],
+          type: 'FeatureCollection',
+          crs: {
+            type: 'name',
+            properties: {
+              name: 'urn:ogc:def:crs:OGC::CRS84'
+            }
+          },
+          features: [{
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [position.coords.longitude, position.coords.latitude]
+            },
+            properties
+          }]
+        };
+        envelopeOut.textContent = JSON.stringify(envelope, null, 2);
+        resultCard.style.display = 'block';
+        const list = loadHistory();
+        list.push(envelope);
+        saveHistory(list);
+        renderHistory();
+        document.getElementById('downloadEnvelope').onclick = () => {
+          const blob2 = new Blob([JSON.stringify(envelope, null, 2)], {
+            type: 'application/geo+json'
+          });
+          const url = URL.createObjectURL(blob2);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'spp_envelope_' + Date.now() + '.geojson';
+          a.click();
+          URL.revokeObjectURL(url);
+        };
+        capStatus.textContent = 'Envelope generated and signed.';
+        capStatus.className = 'status ok';
+      } catch (err) {
+        capStatus.textContent = 'Capture failed: ' + err.message;
+        capStatus.className = 'status err';
+      }
+    });
+  </script>
+</body>
 
 </html>
